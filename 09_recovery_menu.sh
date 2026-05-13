@@ -153,12 +153,19 @@ while true; do
                 echo ""
                 echo "=== Troubleshooting ==="
                 echo ""
-                echo "  1) Disk usage breakdown          (ts_disk_usage.sh)"
-                echo "  2) System / crash / panic logs   (ts_logs.sh)"
-                echo "  3) Inspect a plist file          (ts_plist_inspect.sh)"
-                echo "  4) Startup items & kexts         (ts_startup_items.sh)"
-                echo "  5) Filesystem health check       (ts_filesystem_check.sh)"
-                echo "  6) User accounts & groups        (ts_user_accounts.sh)"
+                echo "  1) Disk usage breakdown               (ts_disk_usage.sh)"
+                echo "  2) System / crash / panic logs        (ts_logs.sh)"
+                echo "  3) Inspect a plist file               (ts_plist_inspect.sh)"
+                echo "  4) Startup items & kexts              (ts_startup_items.sh)"
+                echo "  5) Filesystem health check            (ts_filesystem_check.sh)"
+                echo "  6) User accounts & groups             (ts_user_accounts.sh)"
+                echo "  7) Microsoft / Intune / DDM / Defender(ts_microsoft.sh)"
+                echo "  8) MDM enrollment & config profiles   (ts_mdm_profiles.sh)"
+                echo "  9) System & kernel extensions         (ts_system_extensions.sh)"
+                echo "  a) Network configuration              (ts_network.sh)"
+                echo "  k) Keychain & certificates            (ts_keychain.sh)"
+                echo "  i) Installed applications             (ts_installed_apps.sh)"
+                echo "  m) Time Machine                       (ts_time_machine.sh)"
                 echo "  b) Back to main menu"
                 echo ""
                 read -r -p "Choice: " TSMODE
@@ -171,6 +178,13 @@ while true; do
                     4) run_script troubleshooting/ts_startup_items.sh "${MAC_VOL:-}" ;;
                     5) run_script troubleshooting/ts_filesystem_check.sh "${MAC_VOL:-}" ;;
                     6) run_script troubleshooting/ts_user_accounts.sh "${MAC_VOL:-}" ;;
+                    7) run_script troubleshooting/ts_microsoft.sh "${MAC_VOL:-}" ;;
+                    8) run_script troubleshooting/ts_mdm_profiles.sh "${MAC_VOL:-}" ;;
+                    9) run_script troubleshooting/ts_system_extensions.sh "${MAC_VOL:-}" ;;
+                    a|A) run_script troubleshooting/ts_network.sh "${MAC_VOL:-}" ;;
+                    k|K) run_script troubleshooting/ts_keychain.sh "${MAC_VOL:-}" ;;
+                    i|I) run_script troubleshooting/ts_installed_apps.sh "${MAC_VOL:-}" ;;
+                    m|M) run_script troubleshooting/ts_time_machine.sh "${MAC_VOL:-}" ;;
                     b|B) break ;;
                     *) echo "Unknown option."; sleep 1 ;;
                 esac

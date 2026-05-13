@@ -27,6 +27,13 @@ TROUBLESHOOTING=(
     troubleshooting/ts_startup_items.sh
     troubleshooting/ts_filesystem_check.sh
     troubleshooting/ts_user_accounts.sh
+    troubleshooting/ts_microsoft.sh
+    troubleshooting/ts_mdm_profiles.sh
+    troubleshooting/ts_system_extensions.sh
+    troubleshooting/ts_network.sh
+    troubleshooting/ts_keychain.sh
+    troubleshooting/ts_installed_apps.sh
+    troubleshooting/ts_time_machine.sh
 )
 
 echo "Downloading recovery scripts to: $(pwd)"
