@@ -30,7 +30,8 @@ RESTORED=0
 
 find "$VOL" -type d -name ".disabled" 2>/dev/null | while read -r disabled_dir; do
     parent="$(dirname "$disabled_dir")"
-    mapfile -t plists < <(find "$disabled_dir" -maxdepth 1 -name "*.plist" | sort)
+    plists=()
+    while IFS= read -r _p; do plists+=("$_p"); done < <(find "$disabled_dir" -maxdepth 1 -name "*.plist" | sort)
 
     [[ ${#plists[@]} -eq 0 ]] && continue
 

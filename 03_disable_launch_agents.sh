@@ -79,7 +79,8 @@ for dir in "${DIRS[@]}"; do
     [[ -d "$dir" ]] || continue
     log_section "$dir"
 
-    mapfile -t plists < <(find "$dir" -maxdepth 1 -name "*.plist" 2>/dev/null | sort)
+    plists=()
+    while IFS= read -r _p; do plists+=("$_p"); done < <(find "$dir" -maxdepth 1 -name "*.plist" 2>/dev/null | sort)
 
     if [[ ${#plists[@]} -eq 0 ]]; then
         log_info "  (empty)"

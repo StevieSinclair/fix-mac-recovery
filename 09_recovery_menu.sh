@@ -62,7 +62,7 @@ run_script() {
 }
 
 while true; do
-    clear
+    printf '\033c'
     print_banner
     print_menu
     read -r -p "Choice: " CHOICE
