@@ -17,12 +17,33 @@ SCRIPTS=(
     07_restore_launch_agents.sh
     08_fix_permissions.sh
     09_recovery_menu.sh
+    fetch.sh
+)
+
+TROUBLESHOOTING=(
+    troubleshooting/ts_disk_usage.sh
+    troubleshooting/ts_logs.sh
+    troubleshooting/ts_plist_inspect.sh
+    troubleshooting/ts_startup_items.sh
+    troubleshooting/ts_filesystem_check.sh
+    troubleshooting/ts_user_accounts.sh
 )
 
 echo "Downloading recovery scripts to: $(pwd)"
 echo ""
 
 for script in "${SCRIPTS[@]}"; do
+    curl -fsSL "$BASE/$script" -o "$script"
+    chmod +x "$script"
+    echo "  [ok] $script"
+done
+
+echo ""
+echo "Downloading troubleshooting scripts..."
+echo ""
+
+mkdir -p troubleshooting
+for script in "${TROUBLESHOOTING[@]}"; do
     curl -fsSL "$BASE/$script" -o "$script"
     chmod +x "$script"
     echo "  [ok] $script"

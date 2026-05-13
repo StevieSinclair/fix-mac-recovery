@@ -39,6 +39,7 @@ print_menu() {
     echo "  7) Restore disabled launch agents     (07_restore_launch_agents.sh)"
     echo "  8) Fix home-directory permissions     (08_fix_permissions.sh)"
     echo "  9) Open a subshell (manual commands)"
+    echo "  t) Troubleshooting submenu"
     echo "  l) Show log tail (last 40 lines)"
     echo "  q) Quit"
     echo ""
@@ -144,6 +145,36 @@ while true; do
         9)
             echo "Opening subshell. Type 'exit' to return to menu."
             bash || true
+            ;;
+
+        t|T)
+            while true; do
+                printf '\033c'
+                echo ""
+                echo "=== Troubleshooting ==="
+                echo ""
+                echo "  1) Disk usage breakdown          (ts_disk_usage.sh)"
+                echo "  2) System / crash / panic logs   (ts_logs.sh)"
+                echo "  3) Inspect a plist file          (ts_plist_inspect.sh)"
+                echo "  4) Startup items & kexts         (ts_startup_items.sh)"
+                echo "  5) Filesystem health check       (ts_filesystem_check.sh)"
+                echo "  6) User accounts & groups        (ts_user_accounts.sh)"
+                echo "  b) Back to main menu"
+                echo ""
+                read -r -p "Choice: " TSMODE
+                ts="$(date '+%Y-%m-%d %H:%M:%S')"
+                echo "[$ts] [MENU] [09_recovery_menu.sh] Troubleshooting choice: $TSMODE" >> "$LOG_FILE"
+                case "$TSMODE" in
+                    1) run_script troubleshooting/ts_disk_usage.sh "${MAC_VOL:-}" ;;
+                    2) run_script troubleshooting/ts_logs.sh "${MAC_VOL:-}" ;;
+                    3) run_script troubleshooting/ts_plist_inspect.sh ;;
+                    4) run_script troubleshooting/ts_startup_items.sh "${MAC_VOL:-}" ;;
+                    5) run_script troubleshooting/ts_filesystem_check.sh "${MAC_VOL:-}" ;;
+                    6) run_script troubleshooting/ts_user_accounts.sh "${MAC_VOL:-}" ;;
+                    b|B) break ;;
+                    *) echo "Unknown option."; sleep 1 ;;
+                esac
+            done
             ;;
 
         l|L)
