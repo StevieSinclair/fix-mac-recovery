@@ -39,6 +39,8 @@ print_menu() {
     echo "  7) Restore disabled launch agents     (07_restore_launch_agents.sh)"
     echo "  8) Fix home-directory permissions     (08_fix_permissions.sh)"
     echo "  9) Open a subshell (manual commands)"
+    echo "  u) Install latest macOS updates           (10_install_updates.sh)"
+    echo "  d) Download / verify update packages      (11_download_verify.sh)"
     echo "  t) Troubleshooting submenu"
     echo "  l) Show log tail (last 40 lines)"
     echo "  q) Quit"
@@ -146,6 +148,19 @@ while true; do
             echo "Opening subshell. Type 'exit' to return to menu."
             bash || true
             ;;
+
+        u|U)
+            echo ""
+            echo "  a) List available updates only"
+            echo "  b) List AND install updates"
+            read -r -p "Choose [a/b]: " SUBMODE
+            case "$SUBMODE" in
+                a) run_script 10_install_updates.sh --list-only ;;
+                *) run_script 10_install_updates.sh ;;
+            esac
+            ;;
+
+        d|D) run_script 11_download_verify.sh interactive ;;
 
         t|T)
             while true; do
