@@ -17,6 +17,8 @@ SCRIPTS=(
     07_restore_launch_agents.sh
     08_fix_permissions.sh
     09_recovery_menu.sh
+    10_install_updates.sh
+    11_download_verify.sh
     fetch.sh
 )
 
