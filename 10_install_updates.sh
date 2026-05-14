@@ -115,6 +115,30 @@ if [[ -z "$SW" ]]; then
     echo ""
     echo "  softwareupdate is only present in full macOS, not in all recoveryOS builds."
     echo "  Falling through to startosinstall method."
+else
+    # If the binary came from the mounted volume it will fail with
+    # "library not loaded: OSUpdate" because dyld can't find the frameworks.
+    # Test-run it and if that error appears, set DYLD paths and retry.
+    SYS_VOL="/Volumes/Macintosh HD"
+    TEST_OUT="$("$SW" --list 2>&1 | head -5)" || true
+    if echo "$TEST_OUT" | grep -q "Library not loaded"; then
+        log_warn "softwareupdate: library not loaded — setting DYLD paths from $SYS_VOL"
+        echo ""
+        echo "  Library not loaded error detected. Setting DYLD paths from $SYS_VOL..."
+        export DYLD_FRAMEWORK_PATH="${SYS_VOL}/System/Library/Frameworks:${SYS_VOL}/System/Library/PrivateFrameworks"
+        export DYLD_LIBRARY_PATH="${SYS_VOL}/usr/lib"
+        log_info "DYLD_FRAMEWORK_PATH=$DYLD_FRAMEWORK_PATH"
+        log_info "DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH"
+        # Verify the fix worked
+        if ! "$SW" --list >/dev/null 2>&1; then
+            log_warn "DYLD fix did not resolve the error — falling through to startosinstall."
+            echo "  DYLD fix failed. Falling through to startosinstall."
+            SW=""
+        else
+            echo "  DYLD fix worked. softwareupdate is usable."
+            log_info "DYLD fix successful."
+        fi
+    fi
 fi
 
 # ── softwareupdate path ────────────────────────────────────────────────────────
