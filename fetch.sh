@@ -59,4 +59,8 @@ for script in "${TROUBLESHOOTING[@]}"; do
 done
 
 echo ""
+curl -fsSL "$BASE/README.md" -o README.md
+echo "  [ok] README.md"
+
+echo ""
 echo "Done. Run: bash 09_recovery_menu.sh"
