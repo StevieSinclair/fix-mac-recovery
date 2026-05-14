@@ -39,7 +39,7 @@ This downloads all scripts and opens the interactive menu.
 
 | Script | Purpose |
 |--------|---------|
-| `10_install_updates.sh` | Install macOS updates via `softwareupdate` from Recovery Terminal, bypassing the GUI reinstall loop. Checks network, lists available updates, supports all-updates or macOS-only mode. |
+| `10_install_updates.sh` | Install macOS updates from Recovery Terminal, bypassing the GUI reinstall loop. See [below](#installing-updates). |
 | `11_download_verify.sh` | Download update packages, verify hashes, and inspect contents. See [below](#download--verify). |
 
 ### Troubleshooting
@@ -59,6 +59,45 @@ This downloads all scripts and opens the interactive menu.
 | `troubleshooting/ts_keychain.sh` | Keychain and certificates |
 | `troubleshooting/ts_installed_apps.sh` | Installed applications |
 | `troubleshooting/ts_time_machine.sh` | Time Machine |
+
+---
+
+## Installing updates
+
+`10_install_updates.sh` tries three methods in order, falling back automatically:
+
+### 1. `softwareupdate` (recoveryOS or full macOS)
+
+`softwareupdate` is present in full macOS at `/usr/sbin/softwareupdate` but is absent from many recoveryOS builds. The script searches:
+
+1. Standard recoveryOS paths (`/usr/sbin/`, `/sbin/`)
+2. The mounted macOS volume (e.g. `/Volumes/Macintosh HD/usr/sbin/softwareupdate`) — unlock the volume first with menu option 2, or the script will prompt for the path
+
+If found, it lists available updates and offers:
+- Install all updates
+- Install macOS only (`--os-only`)
+- Skip to `startosinstall`
+
+### 2. `startosinstall` (fallback)
+
+If `softwareupdate` cannot be found, the script falls back to `startosinstall` inside a downloaded **Install macOS X.app**. This is the most reliable method from recoveryOS.
+
+To get the installer app: menu option `d → 1` (Download & Verify → Fetch full macOS installer).
+
+`startosinstall` offers:
+- **Upgrade/reinstall** — keeps user data
+- **Erase and install** — wipes the target volume (requires explicit confirmation)
+
+### Recommended flow when stuck in a recovery loop
+
+```
+Option 1  →  find volumes
+Option 2  →  unlock/mount the APFS volume
+Option u  →  install updates  (will find softwareupdate on the mounted volume,
+                                or fall back to startosinstall)
+```
+
+If you don't yet have an installer app, run option `d → 1` first to download one before running option `u`.
 
 ---
 
@@ -105,7 +144,8 @@ tail -f /tmp/mac_recovery.log
 ## If you're still looping back to Recovery
 
 1. **Disk repair first** — run option 5 (`fsck_apfs`). Filesystem corruption is a common cause.
-2. **Install updates via terminal** — option `u` runs `softwareupdate` directly, bypassing the GUI.
-3. **Reset NVRAM** — option 6 → reset NVRAM, then reboot.
-4. **Apple Silicon startup disk** — hold Power → Options → select the startup disk explicitly.
-5. **Manual NVRAM reset** — hold Cmd+Opt+P+R at startup until you hear the chime twice (Intel) or see the Apple logo twice (Apple Silicon).
+2. **Unlock the volume** — run option 2 so the mounted volume is available to subsequent steps.
+3. **Install updates via terminal** — option `u` searches for `softwareupdate` on the mounted volume and falls back to `startosinstall` if not found.
+4. **Reset NVRAM** — option 6 → reset NVRAM, then reboot.
+5. **Apple Silicon startup disk** — hold Power → Options → select the startup disk explicitly.
+6. **Manual NVRAM reset** — hold Cmd+Opt+P+R at startup until you hear the chime twice (Intel) or see the Apple logo twice (Apple Silicon).
