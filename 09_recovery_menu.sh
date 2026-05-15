@@ -41,6 +41,7 @@ print_menu() {
     echo "  9) Open a subshell (manual commands)"
     echo "  u) Install latest macOS updates           (10_install_updates.sh)"
     echo "  d) Download / verify update packages      (11_download_verify.sh)"
+    echo "  c) chroot into mounted macOS volume        (12_chroot.sh)"
     echo "  t) Troubleshooting submenu"
     echo "  l) Show log tail (last 40 lines)"
     echo "  q) Quit"
@@ -161,6 +162,19 @@ while true; do
             ;;
 
         d|D) run_script 11_download_verify.sh interactive ;;
+
+        c|C)
+            echo ""
+            echo "  a) Interactive chroot shell"
+            echo "  b) Run softwareupdate --list inside chroot"
+            echo "  c) Run softwareupdate --install --all inside chroot"
+            read -r -p "Choose [a/b/c]: " SUBMODE
+            case "$SUBMODE" in
+                b) run_script 12_chroot.sh "${MAC_VOL:-}" -- softwareupdate --list ;;
+                c) run_script 12_chroot.sh "${MAC_VOL:-}" -- softwareupdate --install --all --verbose ;;
+                *) run_script 12_chroot.sh "${MAC_VOL:-}" ;;
+            esac
+            ;;
 
         t|T)
             while true; do

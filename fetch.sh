@@ -19,6 +19,7 @@ SCRIPTS=(
     09_recovery_menu.sh
     10_install_updates.sh
     11_download_verify.sh
+    12_chroot.sh
     fetch.sh
 )
 
